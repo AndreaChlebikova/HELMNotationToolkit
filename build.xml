@@ -51,6 +51,7 @@
                 <include name="jdom-1.1.jar"/>
                 <include name="xerces.jar"/>
                 <include name="sdlib.jar"/>
+            	<include name="cdk-1.4.19.jar"/>
             </fileset>
             <fileset dir="${marvin.dir}">
                 <include name="${marvin.jar.name}"/>

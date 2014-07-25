@@ -8,6 +8,7 @@
 	<classpathentry kind="lib" path="lib/MarvinBeans-5.0.jar"/>
 	<classpathentry kind="lib" path="lib/sdlib.jar"/>
 	<classpathentry kind="lib" path="lib/xerces.jar"/>
+	<classpathentry kind="lib" path="lib/cdk-1.4.19.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
