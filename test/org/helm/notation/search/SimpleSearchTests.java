@@ -8,10 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.helm.notation.MonomerFactory;
-import org.helm.notation.NucleotideFactory;
-import org.helm.notation.tools.SimpleNotationParser;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -30,10 +27,10 @@ public class SimpleSearchTests {
 	@Before
 	public void init() {
 		try {
-			MonomerFactory.finalizeMonomerCache();
-			MonomerFactory.getInstance();
-			NucleotideFactory.getInstance();
-			SimpleNotationParser.resetSeed();
+			//MonomerFactory.finalizeMonomerCache();
+			//MonomerFactory.getInstance();
+			//NucleotideFactory.getInstance();
+			//SimpleNotationParser.resetSeed(); //for ad hoc monomer labels
 			notationList = Files.readAllLines(Paths.get("test/org/helm/notation/search/HELMStrings.txt"), Charset.forName("UTF-8"));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -42,7 +39,7 @@ public class SimpleSearchTests {
 	
 	@After
 	public void finish() {
-		MonomerFactory.finalizeMonomerCache();
+		//MonomerFactory.finalizeMonomerCache();
 		notationList.clear();
 	}
 	
@@ -55,17 +52,11 @@ public class SimpleSearchTests {
 	
 	@Test
 	public void testSequenceSearch() {
-		List<List<String>> peptideList = SequenceSearch.isolatePeptideSequences(notationList);
-		System.out.println(peptideList);
-		
-		List<List<String>> rnaList = SequenceSearch.isolateRnaSequences(notationList);
-		System.out.println(rnaList);
-		
 		Boolean findPeptide = false; //true for peptide search, false for nucleotide search
 		String sequenceOfInterest = "AU";
 		
-		List<Integer> indicesOfInterest = SequenceSearch.findMatchingCompounds(findPeptide, sequenceOfInterest, notationList);
-		List<String> notationsOfInterest = MatchingTools.matchNotation(indicesOfInterest, notationList);
+		Set<Integer> indicesOfInterest = SequenceSearch.findMatchingCompounds(findPeptide, sequenceOfInterest, notationList);
+		Set<String> notationsOfInterest = MatchingTools.matchNotation(indicesOfInterest, notationList);
 		
 		System.out.println("Finding Compounds with Nucleotide Sequence of Interest, "+sequenceOfInterest);
 		System.out.println(indicesOfInterest);
@@ -84,45 +75,45 @@ public class SimpleSearchTests {
 	
 	@Test
 	public void testChemSearch() {
-		List<List<String>> chemList = ChemSearch.isolateChemMonomerSmiles(notationList);
+		List<Set<String>> chemList = ChemSearch.isolateChemSmiles(notationList);
 		System.out.println(chemList);
-		
-		List<List<String>> chemList2 = ChemSearch.isolateChemSmiles(notationList);
-		System.out.println(chemList2);
-		
-		List<List<String>> peptideList = ChemSearch.isolatePeptideMonomerSmiles(notationList);
+
+		List<Set<String>> aaList = ChemSearch.isolateAminoAcidSmiles(notationList);
+		System.out.println(aaList);
+
+		List<Set<String>> peptideList = ChemSearch.isolatePeptideSmiles(notationList);
 		System.out.println(peptideList);
+
+		List<Set<String>> rnaMonomerList = ChemSearch.isolateRnaMonomerSmiles(notationList);
+		System.out.println(rnaMonomerList);
 		
-		List<List<String>> peptideList2 = ChemSearch.isolatePeptideSmiles(notationList);
-		System.out.println(peptideList2);
-		
-		List<List<String>> rnaList = ChemSearch.isolateRnaMonomerSmiles(notationList);
+		List<Set<String>> nucleotideList = ChemSearch.isolateNucleotideSmiles(notationList);
+		System.out.println(nucleotideList);
+
+		List<Set<String>> rnaList = ChemSearch.isolateRnaSmiles(notationList);
 		System.out.println(rnaList);
-		
-		List<List<String>> rnaList2 = ChemSearch.isolateRnaSmiles(notationList);
-		System.out.println(rnaList2);
-		
-		List<List<String>> allList = ChemSearch.isolateAllMonomerSmiles(notationList);
-		System.out.println(allList);
-		
-		List<List<String>> allList2 = ChemSearch.isolateAllSimpleSmiles(notationList);
-		System.out.println(allList2);
-		
+
+		List<Set<String>> allMonomerList = ChemSearch.isolateAllMonomerSmiles(notationList);
+		System.out.println(allMonomerList);
+
+		List<Set<String>> allSimpleList = ChemSearch.isolateAllSimpleSmiles(notationList);
+		System.out.println(allSimpleList);
+
 		List<String> smilesList = ChemSearch.generateSmilesStrings(notationList);
 		System.out.println(smilesList);
 
-		String smartsOfInterest = "C(=O)N"; //found in peptide bonds across monomer boundaries in peptides (not within amino acids though), but also within nucleotides, as present in C/G/T/U bases
+		String smartsOfInterest = "C(=O)N"; //found in peptide bonds across monomer boundaries in peptides (not within amino acids though, except N/Q, but also within nucleotides, as present in C/G/T/U bases
 		
-		List<Integer> indicesOfInterest = ChemSearch.findMatchingCompounds(smartsOfInterest, smilesList);
-		List<Integer> indicesOfInterest2 = ChemSearch.findMatchingCompounds2(smartsOfInterest, chemList);
-		List<Integer> indicesOfInterest3 = ChemSearch.findMatchingCompounds2(smartsOfInterest, chemList2);
-		List<Integer> indicesOfInterest4 = ChemSearch.findMatchingCompounds2(smartsOfInterest, peptideList);
-		List<Integer> indicesOfInterest5 = ChemSearch.findMatchingCompounds2(smartsOfInterest, peptideList2);
-		List<Integer> indicesOfInterest6 = ChemSearch.findMatchingCompounds2(smartsOfInterest, rnaList);
-		List<Integer> indicesOfInterest7 = ChemSearch.findMatchingCompounds2(smartsOfInterest, rnaList2);
-		List<Integer> indicesOfInterest8 = ChemSearch.findMatchingCompounds2(smartsOfInterest, allList);
-		List<Integer> indicesOfInterest9 = ChemSearch.findMatchingCompounds2(smartsOfInterest, allList2);
-		List<String> notationsOfInterest = MatchingTools.matchNotation(indicesOfInterest, notationList);
+		Set<Integer> indicesOfInterest = ChemSearch.findMatchingCompounds(smartsOfInterest, smilesList);
+		Set<Integer> indicesOfInterest2 = ChemSearch.findMatchingCompounds2(smartsOfInterest, chemList);
+		Set<Integer> indicesOfInterest3 = ChemSearch.findMatchingCompounds2(smartsOfInterest, aaList);
+		Set<Integer> indicesOfInterest4 = ChemSearch.findMatchingCompounds2(smartsOfInterest, peptideList);
+		Set<Integer> indicesOfInterest5 = ChemSearch.findMatchingCompounds2(smartsOfInterest, rnaMonomerList);
+		Set<Integer> indicesOfInterest6 = ChemSearch.findMatchingCompounds2(smartsOfInterest, nucleotideList);
+		Set<Integer> indicesOfInterest7 = ChemSearch.findMatchingCompounds2(smartsOfInterest, rnaList);
+		Set<Integer> indicesOfInterest8 = ChemSearch.findMatchingCompounds2(smartsOfInterest, allMonomerList);
+		Set<Integer> indicesOfInterest9 = ChemSearch.findMatchingCompounds2(smartsOfInterest, allSimpleList);
+		Set<String> notationsOfInterest = MatchingTools.matchNotation(indicesOfInterest, notationList);
 		
 		System.out.println("Finding Compounds with Substructure of Interest, "+smartsOfInterest);
 		System.out.println(indicesOfInterest);
@@ -140,13 +131,13 @@ public class SimpleSearchTests {
 		
 		indicesOfInterest = ChemSearch.findMatchingCompounds(smartsOfInterest, smilesList);
 		indicesOfInterest2 = ChemSearch.findMatchingCompounds2(smartsOfInterest, chemList);
-		indicesOfInterest3 = ChemSearch.findMatchingCompounds2(smartsOfInterest, chemList2);
+		indicesOfInterest3 = ChemSearch.findMatchingCompounds2(smartsOfInterest, aaList);
 		indicesOfInterest4 = ChemSearch.findMatchingCompounds2(smartsOfInterest, peptideList);
-		indicesOfInterest5 = ChemSearch.findMatchingCompounds2(smartsOfInterest, peptideList2);
-		indicesOfInterest6 = ChemSearch.findMatchingCompounds2(smartsOfInterest, rnaList);
-		indicesOfInterest7 = ChemSearch.findMatchingCompounds2(smartsOfInterest, rnaList2);
-		indicesOfInterest8 = ChemSearch.findMatchingCompounds2(smartsOfInterest, allList);
-		indicesOfInterest9 = ChemSearch.findMatchingCompounds2(smartsOfInterest, allList2);
+		indicesOfInterest5 = ChemSearch.findMatchingCompounds2(smartsOfInterest, rnaMonomerList);
+		indicesOfInterest6 = ChemSearch.findMatchingCompounds2(smartsOfInterest, nucleotideList);
+		indicesOfInterest7 = ChemSearch.findMatchingCompounds2(smartsOfInterest, rnaList);
+		indicesOfInterest8 = ChemSearch.findMatchingCompounds2(smartsOfInterest, allMonomerList);
+		indicesOfInterest9 = ChemSearch.findMatchingCompounds2(smartsOfInterest, allSimpleList);
 		notationsOfInterest = MatchingTools.matchNotation(indicesOfInterest, notationList);
 		
 		System.out.println("Finding Compounds with Substructure of Interest, "+smartsOfInterest);
@@ -165,13 +156,13 @@ public class SimpleSearchTests {
 		
 		indicesOfInterest = ChemSearch.findMatchingCompounds(smartsOfInterest, smilesList);
 		indicesOfInterest2 = ChemSearch.findMatchingCompounds2(smartsOfInterest, chemList);
-		indicesOfInterest3 = ChemSearch.findMatchingCompounds2(smartsOfInterest, chemList2);
+		indicesOfInterest3 = ChemSearch.findMatchingCompounds2(smartsOfInterest, aaList);
 		indicesOfInterest4 = ChemSearch.findMatchingCompounds2(smartsOfInterest, peptideList);
-		indicesOfInterest5 = ChemSearch.findMatchingCompounds2(smartsOfInterest, peptideList2);
-		indicesOfInterest6 = ChemSearch.findMatchingCompounds2(smartsOfInterest, rnaList);
-		indicesOfInterest7 = ChemSearch.findMatchingCompounds2(smartsOfInterest, rnaList2);
-		indicesOfInterest8 = ChemSearch.findMatchingCompounds2(smartsOfInterest, allList);
-		indicesOfInterest9 = ChemSearch.findMatchingCompounds2(smartsOfInterest, allList2);
+		indicesOfInterest5 = ChemSearch.findMatchingCompounds2(smartsOfInterest, rnaMonomerList);
+		indicesOfInterest6 = ChemSearch.findMatchingCompounds2(smartsOfInterest, nucleotideList);
+		indicesOfInterest7 = ChemSearch.findMatchingCompounds2(smartsOfInterest, rnaList);
+		indicesOfInterest8 = ChemSearch.findMatchingCompounds2(smartsOfInterest, allMonomerList);
+		indicesOfInterest9 = ChemSearch.findMatchingCompounds2(smartsOfInterest, allSimpleList);
 		notationsOfInterest = MatchingTools.matchNotation(indicesOfInterest, notationList);
 		
 		System.out.println("Finding Compounds with Substructure of Interest, "+smartsOfInterest);
