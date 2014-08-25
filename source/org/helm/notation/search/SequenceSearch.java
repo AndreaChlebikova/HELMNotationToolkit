@@ -212,7 +212,7 @@ public class SequenceSearch {
 	 * @return {@link Set} of {@link Integer}s, the indices of complex polymers
 	 *         containing the subsequence of interest
 	 */
-
+	@Deprecated
 	public static Set<Integer> findMatchingCompounds(Boolean findPeptide,
 			String sequenceOfInterest, List<String> notationList) {
 		if (findPeptide) {
@@ -249,8 +249,8 @@ public class SequenceSearch {
 					indicesOfInterest.add(i);
 					break;
 				} else if (seq.cyclic) {
-					String extendedSequence = seq.sequence + seq.sequence; // optimise
-					// later
+					String extendedSequence = seq.sequence + seq.sequence; // TODO
+																			// optimise
 					int k = 0;
 					matcher = regex.matcher(extendedSequence);
 					while (matcher.find()) {

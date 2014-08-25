@@ -7,6 +7,7 @@ package org.helm.notation.search;
  * @author Andrea Chlebikova
  *
  */
+@Deprecated
 public class Query {
 	/**
 	 * Subsequence/SMARTS string to be found.

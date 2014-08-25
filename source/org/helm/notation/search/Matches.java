@@ -1,6 +1,8 @@
 package org.helm.notation.search;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -24,6 +26,13 @@ public class Matches {
 	 * {@link Boolean} denoting whether the search was interrupted
 	 */
 	public Boolean timeoutWarningFlag = false;
+	/**
+	 * {@link List} of HELM {@link String}s denoting complex polymers on which
+	 * search was performed
+	 */
+	public List<String> notationList = new ArrayList<String>(); // TODO check
+																// used
+																// correctly
 
 	public void printout() {
 		Set<Integer> sorted = new TreeSet<Integer>(indicesOfInterest);
@@ -36,5 +45,60 @@ public class Matches {
 			System.out
 					.println("Warning: The search was not completed, so some results may be missing.");
 		}
+	}
+
+	public String text() {
+		String text = "";
+		if (timeoutWarningFlag) {
+			text = "The search was interrupted early, so no results can be displayed.\n\n";
+		} else if (smilesWarningFlag) {
+			text = "Warning: The SMILES strings were not generated for all compounds to be searched, so some results may be missing.\n\n";
+		}
+		return text;
+	}
+
+	public String indices() {
+		String indices = "";
+		Set<Integer> sorted = new TreeSet<Integer>(indicesOfInterest);
+		if (timeoutWarningFlag) {
+			indices = "No results available";
+		} else {
+			for (Integer index : sorted) {
+				indices = indices + index + "\n";
+			}
+		}
+		return indices;
+	}
+
+	public String helms() {
+		String helms = "";
+		Set<Integer> sorted = new TreeSet<Integer>(indicesOfInterest);
+		Set<String> sortedHelms = MatchingTools.matchNotation(sorted,
+				notationList);
+		if (timeoutWarningFlag) {
+			helms = "No results available";
+		} else {
+			for (String helm : sortedHelms) {
+				helms = helms + helm + "\n";
+			}
+		}
+		return helms;
+	}
+
+	public String indicesAndHelms() {
+		String indicesAndHelms = "";
+		List<Integer> sorted = new ArrayList<Integer>(new TreeSet<Integer>(
+				indicesOfInterest));
+		List<String> sortedHelms = MatchingTools.matchNotation(sorted,
+				notationList);
+		if (timeoutWarningFlag) {
+			indicesAndHelms = "No results available";
+		} else {
+			for (int i = 0; i < sorted.size(); i++) {
+				indicesAndHelms = indicesAndHelms + sorted.get(i) + ", "
+						+ sortedHelms.get(i) + "\n";
+			}
+		}
+		return indicesAndHelms;
 	}
 }

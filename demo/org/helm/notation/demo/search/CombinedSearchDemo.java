@@ -25,6 +25,7 @@ import org.helm.notation.search.SequenceSearch;
  * @author Andrea Chlebikova
  *
  */
+@Deprecated
 public class CombinedSearchDemo {
 
 	static List<Set<String>> chemList = null; // h

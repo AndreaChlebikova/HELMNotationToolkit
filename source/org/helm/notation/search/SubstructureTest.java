@@ -10,7 +10,8 @@ import org.openscience.cdk.smiles.smarts.SMARTSQueryTool;
 
 /**
  * This class provides a method for confirming whether a substructure is present
- * in a molecule (currently using the SMARTSQueryTool from CDK).
+ * in a molecule (currently using the SMARTSQueryTool from CDK). //TODO try
+ * using other algorithms
  *
  * @author Andrea Chlebikova
  */
