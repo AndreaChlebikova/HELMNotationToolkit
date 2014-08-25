@@ -41,7 +41,6 @@ public class SubstructureSearchPanel extends Container {
 		isComplex.setSelected(true);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		// c.weightx = 0.5;
 		c.gridx = 0;
 		c.gridy = 0;
 		add(isComplex, c);

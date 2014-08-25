@@ -7,10 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
 import org.helm.notation.search.Constants.*;
 
 /**
@@ -23,7 +19,7 @@ import org.helm.notation.search.Constants.*;
 
 public class CombinedSearch {
 
-	public static Matches performSequenceSearch(SequenceQuery query,
+	private static Matches performSequenceSearch(SequenceQuery query,
 			List<String> notationList) {
 		Matches matches = new Matches();
 		Set<Integer> indicesOfInterest = new HashSet<Integer>();
@@ -54,7 +50,7 @@ public class CombinedSearch {
 		return matches;
 	}
 
-	public static Matches performStructureSearch(StructureQuery query,
+	private static Matches performStructureSearch(StructureQuery query,
 			List<String> notationList) {
 		Matches matches = new Matches();
 		Set<Integer> indicesOfInterest = new HashSet<Integer>();
@@ -152,21 +148,12 @@ public class CombinedSearch {
 		return matches;
 	}
 
-	public static Matches performSequenceSearch(SequenceQuery query,
+	private static Matches performSequenceSearch(SequenceQuery query,
 			List<String> originalNotationList, Set<Integer> oldIndicesOfInterest) {
 		// TODO restriction - check
 		List<String> notationList = new ArrayList<String>();
 		Set<Integer> indicesOfInterest = new HashSet<Integer>();
-		List<Integer> indicesList = new ArrayList<Integer>(oldIndicesOfInterest); // not
-		// sorted,
-		// but
-		// elements
-		// in
-		// fixed
-		// order;
-		// same
-		// as
-		// notationList
+		List<Integer> indicesList = new ArrayList<Integer>(oldIndicesOfInterest);
 		notationList = MatchingTools.matchNotation(indicesList,
 				originalNotationList);
 		Matches matches = performSequenceSearch(query, notationList);
@@ -178,21 +165,12 @@ public class CombinedSearch {
 		return matches;
 	}
 
-	public static Matches performStructureSearch(StructureQuery query,
+	private static Matches performStructureSearch(StructureQuery query,
 			List<String> originalNotationList, Set<Integer> oldIndicesOfInterest) {
 		// TODO restriction - check
 		List<String> notationList = new ArrayList<String>();
 		Set<Integer> indicesOfInterest = new HashSet<Integer>();
-		List<Integer> indicesList = new ArrayList<Integer>(oldIndicesOfInterest); // not
-		// sorted,
-		// but
-		// elements
-		// in
-		// fixed
-		// order;
-		// same
-		// as
-		// notationList
+		List<Integer> indicesList = new ArrayList<Integer>(oldIndicesOfInterest);
 		notationList = MatchingTools.matchNotation(indicesList,
 				originalNotationList);
 		Matches matches = performStructureSearch(query, notationList);
@@ -205,319 +183,13 @@ public class CombinedSearch {
 	}
 
 	/**
-	 * Performs search starting from list of HELM strings.
-	 * 
-	 * @param q
-	 *            Search {@link Query}
-	 * @param notationList
-	 *            {@link List} of HELM {@link String}s denoting complex polymers
-	 * @return {@link Matches} to search query
-	 */
-	@Deprecated
-	public static Matches performSearch(Query q, List<String> notationList) {
-		Matches matches = new Matches();
-		Set<Integer> indicesOfInterest = new HashSet<Integer>();
-		if (q.sequence) {
-			indicesOfInterest = SequenceSearch.findMatchingCompounds(q.peptide,
-					q.queryString, notationList);
-			if (q.negation) {
-				Set<Integer> actualIndicesOfInterest = new HashSet<Integer>();
-				for (int i = 0; i < notationList.size(); i++) {
-					actualIndicesOfInterest.add(i);
-				}
-				actualIndicesOfInterest.removeAll(indicesOfInterest);
-				matches.indicesOfInterest = actualIndicesOfInterest;
-				return matches;
-			}
-			matches.indicesOfInterest = indicesOfInterest;
-			return matches;
-		} else {
-			switch (q.smilesLevel) {
-			case 'c':
-				List<String> smilesList = ChemSearch
-						.generateSmilesStrings(notationList);
-				if (smilesList.contains("*")) { // Will be better to build
-					// this
-					// into the above function
-					matches.smilesWarningFlag = true;
-				}
-				indicesOfInterest = ChemSearch.findMatchingCompounds(
-						q.queryString, smilesList);
-				break;
-			case 's':
-				List<Set<String>> allSimpleList = ChemSearch
-						.isolateAllSimpleSmiles(notationList);
-				for (Set<String> set : allSimpleList) {
-					if (set.contains("*")) {
-						matches.smilesWarningFlag = true;
-					}
-				}
-				indicesOfInterest = ChemSearch.findMatchingCompounds2(
-						q.queryString, allSimpleList);
-				break;
-			case 'm':
-				List<Set<String>> allMonomerList = ChemSearch
-						.isolateAllMonomerSmiles(notationList);
-				for (Set<String> set : allMonomerList) {
-					if (set.contains("*")) {
-						matches.smilesWarningFlag = true;
-					}
-				}
-				indicesOfInterest = ChemSearch.findMatchingCompounds2(
-						q.queryString, allMonomerList);
-				break;
-			case 'h':
-				List<Set<String>> chemList = ChemSearch
-						.isolateChemSmiles(notationList);
-				for (Set<String> set : chemList) {
-					if (set.contains("*")) {
-						matches.smilesWarningFlag = true;
-					}
-				}
-				indicesOfInterest = ChemSearch.findMatchingCompounds2(
-						q.queryString, chemList);
-				break;
-			case 'p':
-				List<Set<String>> peptideList = ChemSearch
-						.isolatePeptideSmiles(notationList);
-				for (Set<String> set : peptideList) {
-					if (set.contains("*")) {
-						matches.smilesWarningFlag = true;
-					}
-				}
-				indicesOfInterest = ChemSearch.findMatchingCompounds2(
-						q.queryString, peptideList);
-				break;
-			case 'r':
-				List<Set<String>> rnaList = ChemSearch
-						.isolateRnaSmiles(notationList);
-				for (Set<String> set : rnaList) {
-					if (set.contains("*")) {
-						matches.smilesWarningFlag = true;
-					}
-				}
-				indicesOfInterest = ChemSearch.findMatchingCompounds2(
-						q.queryString, rnaList);
-				break;
-			case 'a':
-				List<Set<String>> aaList = ChemSearch
-						.isolateAminoAcidSmiles(notationList);
-				for (Set<String> set : aaList) {
-					if (set.contains("*")) {
-						matches.smilesWarningFlag = true;
-					}
-				}
-				indicesOfInterest = ChemSearch.findMatchingCompounds2(
-						q.queryString, aaList);
-				break;
-			case 'n':
-				List<Set<String>> nucleotideList = ChemSearch
-						.isolateNucleotideSmiles(notationList);
-				for (Set<String> set : nucleotideList) {
-					if (set.contains("*")) {
-						matches.smilesWarningFlag = true;
-					}
-				}
-				indicesOfInterest = ChemSearch.findMatchingCompounds2(
-						q.queryString, nucleotideList);
-				break;
-			case 'b':
-				List<Set<String>> rnaMonomerList = ChemSearch
-						.isolateRnaMonomerSmiles(notationList);
-				for (Set<String> set : rnaMonomerList) {
-					if (set.contains("*")) {
-						matches.smilesWarningFlag = true;
-					}
-				}
-				indicesOfInterest = ChemSearch.findMatchingCompounds2(
-						q.queryString, rnaMonomerList);
-				break;
-			}
-			if (q.negation) {
-				Set<Integer> actualIndicesOfInterest = new HashSet<Integer>();
-				for (int i = 0; i < notationList.size(); i++) {
-					actualIndicesOfInterest.add(i);
-				}
-				actualIndicesOfInterest.removeAll(indicesOfInterest);
-				matches.indicesOfInterest = actualIndicesOfInterest;
-				return matches;
-			}
-			matches.indicesOfInterest = indicesOfInterest;
-			return matches;
-		}
-	}
-
-	/**
-	 * Performs search starting from list of SMILES strings of complex polymers.
-	 * 
-	 * @param q
-	 *            Search {@link Query}
-	 * @param relevantList
-	 *            {@link List} of SMILES {@link String}s denoting complex
-	 *            polymers
-	 * @return {@link Matches} to search query
-	 */
-	@Deprecated
-	public static Matches performPartialSearch(Query q,
-			List<String> relevantList) {
-		Matches matches = new Matches();
-		Set<Integer> indicesOfInterest = new HashSet<Integer>();
-		if (q.sequence) {
-			return matches;
-		} else {
-			switch (q.smilesLevel) {
-			case 'c':
-				indicesOfInterest = ChemSearch.findMatchingCompounds(
-						q.queryString, relevantList);
-				break;
-			default:
-				break;
-			}
-			if (q.negation) {
-				Set<Integer> actualIndicesOfInterest = new HashSet<Integer>();
-				for (int i = 0; i < relevantList.size(); i++) {
-					actualIndicesOfInterest.add(i);
-				}
-				actualIndicesOfInterest.removeAll(indicesOfInterest);
-				matches.indicesOfInterest = actualIndicesOfInterest;
-				return matches;
-			}
-			matches.indicesOfInterest = indicesOfInterest;
-			if (relevantList.contains("*")) {
-				matches.smilesWarningFlag = true;
-			}
-			return matches;
-		}
-	}
-
-	/**
-	 * Performs search starting from list of sets of SMILES strings of the
-	 * relevant parts.
-	 * 
-	 * @param q
-	 *            Search {@link Query}
-	 * @param relevantList
-	 *            {@link List} of {@link Set}s of SMILES {@link String}s
-	 *            denoting the relevant parts of the complex polymers
-	 * @return {@link Matches} to search query
-	 */
-	@Deprecated
-	public static Matches performPartialSearch2(Query q,
-			List<Set<String>> relevantList) {
-		Matches matches = new Matches();
-		Set<Integer> indicesOfInterest = new HashSet<Integer>();
-		if (q.sequence) {
-			return matches;
-		} else {
-			switch (q.smilesLevel) {
-			case 's':
-			case 'm':
-			case 'h':
-			case 'p':
-			case 'r':
-			case 'a':
-			case 'n':
-			case 'b':
-				indicesOfInterest = ChemSearch.findMatchingCompounds2(
-						q.queryString, relevantList);
-				for (Set<String> set : relevantList) {
-					if (set.contains("*")) {
-						matches.smilesWarningFlag = true;
-					}
-				}
-				break;
-			default:
-				break;
-			}
-			if (q.negation) {
-				Set<Integer> actualIndicesOfInterest = new HashSet<Integer>();
-				for (int i = 0; i < relevantList.size(); i++) {
-					actualIndicesOfInterest.add(i);
-				}
-				actualIndicesOfInterest.removeAll(indicesOfInterest);
-				matches.indicesOfInterest = actualIndicesOfInterest;
-				return matches;
-			}
-			matches.indicesOfInterest = indicesOfInterest;
-			return matches;
-		}
-	}
-
-	/**
-	 * Performs search starting from list of sets of the relevant kind of
-	 * sequences.
-	 * 
-	 * @param q
-	 *            Search {@link Query}
-	 * @param relevantList
-	 *            {@link List} of {@link Set}s of the relevant kind of
-	 *            {@link Sequence}s
-	 * @return {@link Matches} to search query
-	 */
-	@Deprecated
-	public static Matches performPartialSearch3(Query q,
-			List<Set<Sequence>> relevantList) {
-		Matches matches = new Matches();
-		Set<Integer> indicesOfInterest = new HashSet<Integer>();
-		if (q.sequence) {
-			if (q.peptide) {
-				Pattern regex = SequenceSearch
-						.peptideStringToRegex(q.queryString);
-				indicesOfInterest = SequenceSearch
-						.findPeptideMatchingCompounds(regex, relevantList);
-			} else {
-				Pattern regex = SequenceSearch.rnaStringToRegex(q.queryString);
-				indicesOfInterest = SequenceSearch.findRnaMatchingCompounds(
-						regex, relevantList);
-			}
-			if (q.negation) {
-				Set<Integer> actualIndicesOfInterest = new HashSet<Integer>();
-				for (int i = 0; i < relevantList.size(); i++) {
-					actualIndicesOfInterest.add(i);
-				}
-				actualIndicesOfInterest.removeAll(indicesOfInterest);
-				matches.indicesOfInterest = actualIndicesOfInterest;
-				return matches;
-			}
-			matches.indicesOfInterest = indicesOfInterest;
-			return matches;
-		} else {
-			return matches;
-		}
-	}
-
-	/**
-	 * Method to combine the {@link Matches} from two separate queries, either
+	 * Method to combine the {@link Matches} from separate queries, either
 	 * by intersection or union.
 	 * 
-	 * @param m1
-	 *            {@link Matches} from first query
-	 * @param m2
-	 *            {@link Matches} from second query
-	 * @param and
-	 *            {@link Boolean} - true if combine by intersection, false if
-	 *            combine by union
-	 * @return {@link Matches} for combination query
+	 * @param list {@link List} of {@link Matches} to be combined
+	 * @param connector {@link Connector} denoting the combination operation
+	 * @return {@link Matches} denoting combined results
 	 */
-	@Deprecated
-	public static Matches combineSearches(Matches m1, Matches m2, Boolean and) {
-		Matches matches = new Matches();
-		matches.smilesWarningFlag = m1.smilesWarningFlag
-				|| m2.smilesWarningFlag;
-		matches.timeoutWarningFlag = m1.timeoutWarningFlag
-				|| m2.timeoutWarningFlag;
-		if (and) { // intersection
-			matches.indicesOfInterest = new HashSet<Integer>(
-					m1.indicesOfInterest);
-			matches.indicesOfInterest.retainAll(m2.indicesOfInterest);
-
-		} else { // union
-			matches.indicesOfInterest = new HashSet<Integer>(
-					m1.indicesOfInterest);
-			matches.indicesOfInterest.addAll(m2.indicesOfInterest);
-		}
-		return matches;
-	}
 
 	public static Matches combineSearches(List<Matches> list,
 			Connector connector) {
@@ -555,10 +227,11 @@ public class CombinedSearch {
 	}
 
 	/**
+	 * Method for carrying out a combined search.
 	 * 
-	 * @param grouping
-	 * @param notationList
-	 * @return
+	 * @param grouping {@link Grouping} containing queries and search logic
+	 * @param notationList {@link List} of HELM {@link String}s denoting complex polymers
+	 * @return {@link Matches} to combined query
 	 */
 
 	public static Matches performSearch(Grouping grouping,
@@ -675,45 +348,6 @@ public class CombinedSearch {
 			}
 		}
 		return (Matches) grouping.data;
-	}
-
-	@Deprecated
-	public static Matches performUnoptimisedSearchDemo(CombinedQuery cq,
-			List<String> notationList) {
-		Matches matches = new Matches();
-		List<Matches> partialMatches = new ArrayList<Matches>();
-		Set<Integer> indicesOfInterest = new HashSet<Integer>();
-		for (int j = 0; j < cq.queryList.size(); j++) {
-			partialMatches
-					.add(performSearch(cq.queryList.get(j), notationList));
-			matches.smilesWarningFlag = matches.smilesWarningFlag
-					|| partialMatches.get(j).smilesWarningFlag;
-		}
-		for (int i = 0; i < notationList.size(); i++) {
-			String expression = cq.booleanConnectorsList.get(0);
-			for (int j = 0; j < cq.queryList.size(); j++) {
-				expression = expression
-						+ (partialMatches.get(j).indicesOfInterest.contains(i))
-						+ cq.booleanConnectorsList.get(j + 1);
-			}
-			expression = expression.replace("AND", "&&");
-			expression = expression.replace("OR", "||");
-			expression = expression.replace("NOT", "!");
-			ScriptEngineManager manager = new ScriptEngineManager();
-			ScriptEngine engine = manager.getEngineByName("js");
-			Object result = null;
-			try {
-				result = engine.eval(expression);
-				if ((Boolean) result) {
-					indicesOfInterest.add(i);
-				}
-			} catch (ScriptException e) {
-				e.printStackTrace();
-			}
-		}
-		matches.indicesOfInterest = indicesOfInterest;
-		matches.notationList = notationList;
-		return matches;
 	}
 
 	// private static String createIndent(int depth) { //TODO can delete later -

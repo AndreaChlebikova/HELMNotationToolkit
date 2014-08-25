@@ -23,7 +23,6 @@ public class SequenceSearchPanel extends Container {
 		isPeptide.setSelected(true);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		// c.weightx = 0.5;
 		c.gridx = 0;
 		c.gridy = 0;
 		add(isPeptide, c);

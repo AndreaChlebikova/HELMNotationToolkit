@@ -3,7 +3,8 @@ package org.helm.notation.search;
 import java.util.Iterator;
 
 /**
- * Iterator for tree structure by Grzegorz Dev
+ * 
+ * Iterator for grouping tree structure (by Grzegorz Dev)
  *
  */
 public class GroupingIter implements Iterator<Grouping> {

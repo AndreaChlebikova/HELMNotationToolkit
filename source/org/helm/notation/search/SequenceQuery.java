@@ -6,11 +6,15 @@ package org.helm.notation.search;
 import org.helm.notation.search.Constants.*;
 
 /**
+ * The SequenceQuery class represents a sequence query.
+ * 
  * @author Andrea Chlebikova
  *
  */
-public class SequenceQuery extends GeneralQuery {
+public class SequenceQuery extends Query {
+	/** {@link String} denoting sequence to be found */
 	public String sequence; // TODO delete, or delete queryString
+	/** {@link SequenceType} denoting whether the sequence is a peptide/nucleotide sequence */
 	public SequenceType sequenceType;
 
 	public SequenceQuery(String sequence, SequenceType sequenceType) {

@@ -18,35 +18,7 @@ public class ResultsPane extends JScrollPane {
 	JTextArea resultsText = new JTextArea(
 			"You selected for no results to be displayed on the screen, but they have now been printed to the file.");
 	Container content = new Container();
-
-	@Deprecated
-	public ResultsPane(Matches matches) {
-		setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		titleLabel.setFont(new Font(titleLabel.getFont().getFontName(),
-				Font.BOLD, 16));
-		if (matches.indices().isEmpty()) {
-			resultsText.setText(matches.text() + "\nNo matches were found.");
-		} else {
-			resultsText.setText(matches.text() + "\nList of matches:"
-					+ matches.indices());
-		}
-		resultsText.setEditable(false);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 0.5;
-		c.gridx = 0;
-		c.gridy = 0;
-		add(titleLabel, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 0.5;
-		c.gridx = 0;
-		c.gridy = 1;
-		add(resultsText, c);
-	}
-
+	
 	public ResultsPane(Matches matches, boolean helmS, boolean helmF,
 			boolean indicesS, boolean indicesF) {
 		content.setLayout(new GridBagLayout());

@@ -4,16 +4,25 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.helm.notation.search.Constants.*;
 
 /**
+ * The Grouping class stores both partial queries, and the way they are
+ * logically connected, in a tree structure.
+ * 
+ * The leaves in the Grouping are usually {@link Query} objects ({@link Matches}
+ * during evaluation), while the remaining nodes are {@link Connector}s.
+ * 
  * @author Andrea Chlebikova (based on tree structure by Grzegorz Dev)
  *
  */
 
 public class Grouping implements Iterable<Grouping> {
-	public Object data; // Nodes are Connectors (AND/OR), as per Constants;
-	// leaves are Queries
+	/** Data held at node ({@link Query}/{@link Matches}/{@link Connector}) */
+	public Object data;
+	/** Parent ({@link Grouping}) */
 	public Grouping parent;
+	/** {@link List} of children ({@link Grouping}s) */
 	List<Grouping> children;
 
 	public boolean isRoot() {
@@ -24,23 +33,53 @@ public class Grouping implements Iterable<Grouping> {
 		return children.size() == 0;
 	}
 
+	public int getLevel() {
+		if (this.isRoot())
+			return 0;
+		else
+			return parent.getLevel() + 1;
+	}
+
+	/**
+	 * Constructor from data at a single node only.
+	 * 
+	 * @param data
+	 *            {@link Object} at node
+	 */
+
 	public Grouping(Object data) {
 		this.data = data;
 		this.children = new LinkedList<Grouping>();
 	}
 
-	public Grouping(Object data, Grouping firstNode, Grouping secondNode) { // used
-		// in
-		// initial
-		// tree
-		// construction
-		// from
-		// parser
+	/**
+	 * Constructor used during parsing, which creates a binary tree.
+	 * 
+	 * @param data
+	 *            {@link Object} at node
+	 * @param firstNode
+	 *            {@link Grouping} first child
+	 * @param secondNode
+	 *            {@link Grouping} second child
+	 */
+
+	public Grouping(Object data, Grouping firstNode, Grouping secondNode) {
 		this.data = data;
 		this.children = new LinkedList<Grouping>();
 		this.children.add(firstNode);
 		this.children.add(secondNode);
 	}
+
+	/**
+	 * Constructor from a list of queries, or existing groupings, and a
+	 * connector.
+	 * 
+	 * @param parentData
+	 *            {@link Connector}
+	 * @param childrenData
+	 *            {@link List} of {@link Object}s ({@link Query}/{@link Matches}
+	 *            /{@link Connector}/{@link Grouping})
+	 */
 
 	public Grouping(Object parentData, List<Object> childrenData) {
 		this.data = parentData;
@@ -49,6 +88,15 @@ public class Grouping implements Iterable<Grouping> {
 			this.addChild(childData);
 		}
 	}
+
+	/**
+	 * Method for adding a child to an existing grouping.
+	 * 
+	 * @param child
+	 *            {@link Object} ({@link Query}/{@link Matches}/
+	 *            {@link Connector}/{@link Grouping})
+	 * @return {@link Grouping} with added child
+	 */
 
 	public Grouping addChild(Object child) {
 		Grouping childNode;
@@ -60,13 +108,6 @@ public class Grouping implements Iterable<Grouping> {
 		childNode.parent = this;
 		this.children.add(childNode);
 		return childNode;
-	}
-
-	public int getLevel() {
-		if (this.isRoot())
-			return 0;
-		else
-			return parent.getLevel() + 1;
 	}
 
 	/**

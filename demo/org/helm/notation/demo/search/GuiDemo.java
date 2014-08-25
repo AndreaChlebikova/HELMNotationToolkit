@@ -30,7 +30,7 @@ public class GuiDemo {
 	static ResultsPane resultsPane;
 	static WaitingPane waitingPane;
 	static Grouping grouping;
-	static List<GeneralQuery> queryList = new ArrayList<GeneralQuery>();
+	static List<Query> queryList = new ArrayList<Query>();
 	static List<String> notationList;
 	static Matches matches = new Matches();
 	static boolean interrupted = false;
@@ -84,7 +84,7 @@ public class GuiDemo {
 	}
 
 	public static void saveQuery(int i) {
-		GeneralQuery query = null;
+		Query query = null;
 		if (queryPane.isSequence.isSelected()) {
 			if (invalidSequence(
 					queryPane.sequenceSearch.stringTextField.getText(),
@@ -230,7 +230,6 @@ public class GuiDemo {
 		return false;
 	}
 
-	@Deprecated
 	private static boolean invalidSequence(String sequence, boolean peptide) {
 		Pattern valid;
 		if (peptide) {

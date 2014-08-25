@@ -10,6 +10,8 @@ import java.util.Stack;
 import org.helm.notation.search.Constants.Connector;
 
 /**
+ * This class provides methods for converting infix input of boolean connectors between queries into a grouping (tree form).
+ * 
  * @author Andrea Chlebikova
  *
  */
@@ -40,8 +42,17 @@ public class BooleanParser { // TODO does not necessarily flag up invalid
 			throw new ExpressionException("Invalid logic in search expression.");
 	}
 
+	/**
+	 * Method for producing infix form by combining query and string objects input.
+	 * 
+	 * @param queryList {@link List} of {@link Query} objects placed between strings denoting logic.
+	 * @param booleanConnectorsList {@link List} of {@link String}s containing logic connectors and brackets
+	 * @return {@link List} of {@link Object}s to be parsed, in infix form
+	 * @throws ExpressionException
+	 */
+	
 	public static List<Object> combineListsToInfix(
-			List<GeneralQuery> queryList, List<String> booleanConnectorsList)
+			List<Query> queryList, List<String> booleanConnectorsList)
 			throws ExpressionException {
 		final List<Object> infix = new ArrayList<Object>();
 
@@ -67,32 +78,14 @@ public class BooleanParser { // TODO does not necessarily flag up invalid
 		return infix;
 	}
 
-	@Deprecated
-	public static List<Object> combineListsToInfix2(List<Query> queryList,
-			List<String> booleanConnectorsList) throws Exception {
-		final List<Object> infix = new ArrayList<Object>();
-
-		for (int j = 0; j < booleanConnectorsList.size(); j++) {
-			String bool = booleanConnectorsList.get(j);
-			bool = bool.replace("AND", "&");
-			bool = bool.replace("OR", "|");
-			if (!bool.isEmpty()) {
-				for (int i = 0; i < bool.length(); i++) {
-					if (bool.charAt(i) == '(' || bool.charAt(i) == ')'
-							|| connectorMapping.containsKey(bool.charAt(i))) {
-						infix.add(bool.charAt(i));
-					} else {
-						throw new Exception("Invalid term starting with "
-								+ bool.charAt(i) + " in search query.");
-					}
-				}
-			}
-			if (j < booleanConnectorsList.size() - 1)
-				infix.add(queryList.get(j));
-		}
-		return infix;
-	}
-
+	/**
+	 * Method for parsing infix input of objects into a grouping (tree form).
+	 * 
+	 * @param infix {@link List} of {@link Object}s to be parsed
+	 * @return {@link Grouping} encoding the same logical expression
+	 * @throws ExpressionException
+	 */
+	
 	public static Grouping parse(List<Object> infix) throws ExpressionException {
 		final Stack<Object> tempStack = new Stack<Object>();
 		final Stack<Grouping> finalStack = new Stack<Grouping>();

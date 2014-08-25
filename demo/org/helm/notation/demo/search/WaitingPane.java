@@ -24,8 +24,6 @@ public class WaitingPane extends Container {
 
 	private final ActionListener interrupt = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			// TODO remove CombinedSearchDemo2.interrupted=true;
-			// TODO remove CombinedSearchDemo2.displayResults();
 			GuiDemo.interrupted = true;
 			GuiDemo.displayResults();
 		}

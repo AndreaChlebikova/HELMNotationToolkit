@@ -8,7 +8,12 @@ package org.helm.notation.search;
  *
  */
 public class Constants {
-
+	
+	/**
+	 * Denotes boolean connectors (and/or)
+	 * @author Andrea Chlebikova
+	 *
+	 */
 	public enum Connector {
 		OR(0, '|'), AND(1, '&');
 
@@ -29,14 +34,32 @@ public class Constants {
 		}
 	}
 
+	/**
+	 * Denotes type of sequence (peptide/nucleotide)
+	 * 
+	 * @author Andrea Chlebikova
+	 *
+	 */
 	public enum SequenceType {
 		PEPTIDE, NUCLEOTIDE
 	}
 
+	/**
+	 * Denotes type of search (exact/submatch/similarity)
+	 * 
+	 * @author Andrea Chlebikova
+	 *
+	 */
 	public enum SearchType {
 		EXACT, SUBMATCH, SIMILARITY
 	}
-
+	
+	/**
+	 * Denotes level of substructure search (complex polymer/simple polymer/monomer/chem/peptide/rna/amino acid/nucleotide/ base, phosphate, sugar)
+	 * 
+	 * @author Andrea Chlebikova
+	 *
+	 */
 	public enum SmilesLevel {
 		COMPLEX, SIMPLE, MONOMER, CHEM, PEPTIDE, RNA, AMINOACID, NUCLEOTIDE, BASEPHOSPHATESUGAR
 	}

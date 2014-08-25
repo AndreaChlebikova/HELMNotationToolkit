@@ -13,19 +13,15 @@ import java.util.TreeSet;
  *
  */
 public class Matches {
-	/**
-	 * {@link Set} of indices of polymers which match the query.
-	 */
+	/** {@link Set} of indices of polymers which match the query. */
 	public Set<Integer> indicesOfInterest = new HashSet<Integer>();
 	/**
-	 * {@link Boolean} denoting whether some SMILES strings failed to be
+	 * {@link boolean} denoting whether some SMILES strings failed to be
 	 * generated
 	 */
-	public Boolean smilesWarningFlag = false;
-	/**
-	 * {@link Boolean} denoting whether the search was interrupted
-	 */
-	public Boolean timeoutWarningFlag = false;
+	public boolean smilesWarningFlag = false;
+	/** {@link boolean} denoting whether the search was interrupted */
+	public boolean timeoutWarningFlag = false;
 	/**
 	 * {@link List} of HELM {@link String}s denoting complex polymers on which
 	 * search was performed
@@ -34,18 +30,12 @@ public class Matches {
 																// used
 																// correctly
 
-	public void printout() {
-		Set<Integer> sorted = new TreeSet<Integer>(indicesOfInterest);
-		System.out.println("Sorted list of matches: " + sorted);
-		if (smilesWarningFlag) {
-			System.out
-					.println("Warning: The SMILES strings were not generated for all compounds to be searched, so some results may be missing.");
-		}
-		if (timeoutWarningFlag) {
-			System.out
-					.println("Warning: The search was not completed, so some results may be missing.");
-		}
-	}
+	/**
+	 * Method that generates text description of any warnings that apply to the
+	 * search results.
+	 * 
+	 * @return {@link String}, the warnings description
+	 */
 
 	public String text() {
 		String text = "";
@@ -56,6 +46,12 @@ public class Matches {
 		}
 		return text;
 	}
+
+	/**
+	 * Method that generates text containing the indices of matches.
+	 * 
+	 * @return {@link String} with search result indices
+	 */
 
 	public String indices() {
 		String indices = "";
@@ -69,6 +65,12 @@ public class Matches {
 		}
 		return indices;
 	}
+
+	/**
+	 * Method that generates text containing the HELM notations of matches.
+	 * 
+	 * @return {@link String} with search result HELM notations
+	 */
 
 	public String helms() {
 		String helms = "";
@@ -84,6 +86,13 @@ public class Matches {
 		}
 		return helms;
 	}
+
+	/**
+	 * Method that generates text containing the indices and HELM notations of
+	 * matches.
+	 * 
+	 * @return {@link String} with search result indices and HELM notations
+	 */
 
 	public String indicesAndHelms() {
 		String indicesAndHelms = "";

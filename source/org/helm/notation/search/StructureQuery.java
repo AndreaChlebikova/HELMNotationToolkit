@@ -6,10 +6,12 @@ package org.helm.notation.search;
 import org.helm.notation.search.Constants.*;
 
 /**
+ * The StructureQuery class represents a structure query.
+ * 
  * @author Andrea Chlebikova
  *
  */
-public class StructureQuery extends GeneralQuery {
+public class StructureQuery extends Query {
 	public String smarts; // TODO delete, or delete queryString
 	public SmilesLevel smilesLevel;
 	public SearchType searchType = SearchType.SUBMATCH;
