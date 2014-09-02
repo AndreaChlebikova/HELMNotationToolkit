@@ -1,6 +1,8 @@
 package org.helm.notation.demo.search;
 
 /**
+ * A class illustrating the use of a simple GUI for query input, creation of a grouping of queries and subsequent passing of the grouping object to the search functions to carry out the search. 
+ * 
  * @author Andrea Chlebikova
  *
  */
@@ -44,8 +46,9 @@ public class GuiDemo {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// TODO check threading
+		
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				frame.setSize(700, 300);
 				frame.setResizable(false);
@@ -61,6 +64,7 @@ public class GuiDemo {
 
 	public static void loadNewQuery() {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				queryPane = new QueryPane();
 				queryPane.substructureSearch.setVisible(false);
@@ -74,6 +78,7 @@ public class GuiDemo {
 
 	public static void loadCombineQueries() {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				combinationPane = new CombinationPane(queryList);
 				frame.setContentPane(combinationPane);
@@ -158,8 +163,12 @@ public class GuiDemo {
 					.isSelected())) {
 				JOptionPane.showMessageDialog(frame,
 						"No ouput option selected.");
+			} else if ((combinationPane.helmToFile.isSelected()||combinationPane.indicesToFile.isSelected())&&invalidFile(combinationPane.location.getText())) {
+				JOptionPane.showMessageDialog(frame,
+						"Invalid file path.");
 			} else {
 				SwingUtilities.invokeLater(new Runnable() {
+					@Override
 					public void run() {
 						waitingPane = new WaitingPane();
 						frame.setContentPane(waitingPane);
@@ -169,6 +178,7 @@ public class GuiDemo {
 				});
 
 				Thread thread = new Thread() {
+					@Override
 					public void run() {
 						searching();
 					}
@@ -191,8 +201,10 @@ public class GuiDemo {
 		}
 		if (combinationPane.helmToFile.isSelected()
 				|| combinationPane.indicesToFile.isSelected()) {
-			try (PrintWriter out = new PrintWriter(
-					combinationPane.location.getText())) {
+			PrintWriter out;
+			try {
+				out = new PrintWriter(
+						combinationPane.location.getText());
 				if (combinationPane.helmToFile.isSelected()) {
 					if (combinationPane.indicesToFile.isSelected()) {
 						out.println(matches.indicesAndHelms());
@@ -204,10 +216,11 @@ public class GuiDemo {
 				}
 				out.close();
 			} catch (FileNotFoundException e) {
-				e.printStackTrace(); // TODO catch at input stage
+				e.printStackTrace();
 			}
 		}
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				resultsPane = new ResultsPane(matches,
 						combinationPane.helmOnScreen.isSelected(),
@@ -221,9 +234,18 @@ public class GuiDemo {
 		});
 	}
 
+	private static boolean invalidFile(String location) {
+		try {new PrintWriter(
+					combinationPane.location.getText());
+			return false;
+		} catch (FileNotFoundException e) {
+			return true;
+		}
+	}
+	
 	private static boolean invalidSmarts(String smarts) {
 		try {
-			SMARTSQueryTool test = new SMARTSQueryTool(smarts);
+			new SMARTSQueryTool(smarts);
 		} catch (CDKException e) {
 			return true;
 		}

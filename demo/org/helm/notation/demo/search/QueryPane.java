@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.helm.notation.demo.search;
 
 import java.awt.*;
@@ -27,6 +24,7 @@ public class QueryPane extends Container {
 	JButton combineQueries = new JButton("Combine partial queries");
 
 	private final ActionListener isSequenceOrStructureListener = new ActionListener() {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (isSequence.isSelected()) {
 				substructureSearch.setVisible(false);
@@ -43,15 +41,15 @@ public class QueryPane extends Container {
 	};
 
 	private final ActionListener addAnotherQuery = new ActionListener() {
+		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO remove CombinedSearchDemo2.saveQuery(1);
 			GuiDemo.saveQuery(1);
 		}
 	};
 
 	private final ActionListener startCombineQueries = new ActionListener() {
+		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO remove CombinedSearchDemo2.saveQuery(2);
 			GuiDemo.saveQuery(2);
 		}
 	};

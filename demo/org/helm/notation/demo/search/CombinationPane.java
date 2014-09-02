@@ -35,6 +35,7 @@ public class CombinationPane extends JScrollPane {
 	Container content = new Container();
 
 	private final ActionListener startSearch = new ActionListener() {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			booleanConnectorsList.clear();
 			for (JTextField bool : booleanTextFields) {

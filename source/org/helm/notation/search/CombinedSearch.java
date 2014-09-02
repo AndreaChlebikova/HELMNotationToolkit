@@ -22,6 +22,7 @@ public class CombinedSearch {
 	private static Matches performSequenceSearch(SequenceQuery query,
 			List<String> notationList) {
 		Matches matches = new Matches();
+		matches.notationList = notationList;
 		Set<Integer> indicesOfInterest = new HashSet<Integer>();
 		if (query.sequenceType == SequenceType.PEPTIDE) {
 			List<Set<Sequence>> peptideList = SequenceSearch
@@ -53,6 +54,7 @@ public class CombinedSearch {
 	private static Matches performStructureSearch(StructureQuery query,
 			List<String> notationList) {
 		Matches matches = new Matches();
+		matches.notationList = notationList;
 		Set<Integer> indicesOfInterest = new HashSet<Integer>();
 		switch (query.smilesLevel) {
 		case COMPLEX:
@@ -150,14 +152,12 @@ public class CombinedSearch {
 
 	private static Matches performSequenceSearch(SequenceQuery query,
 			List<String> originalNotationList, Set<Integer> oldIndicesOfInterest) {
-		// TODO restriction - check
 		List<String> notationList = new ArrayList<String>();
 		Set<Integer> indicesOfInterest = new HashSet<Integer>();
 		List<Integer> indicesList = new ArrayList<Integer>(oldIndicesOfInterest);
 		notationList = MatchingTools.matchNotation(indicesList,
 				originalNotationList);
 		Matches matches = performSequenceSearch(query, notationList);
-		// FIX INDICES BACK - //TODO check
 		for (Integer index : matches.indicesOfInterest) {
 			indicesOfInterest.add(indicesList.get(index));
 		}
@@ -167,14 +167,12 @@ public class CombinedSearch {
 
 	private static Matches performStructureSearch(StructureQuery query,
 			List<String> originalNotationList, Set<Integer> oldIndicesOfInterest) {
-		// TODO restriction - check
 		List<String> notationList = new ArrayList<String>();
 		Set<Integer> indicesOfInterest = new HashSet<Integer>();
 		List<Integer> indicesList = new ArrayList<Integer>(oldIndicesOfInterest);
 		notationList = MatchingTools.matchNotation(indicesList,
 				originalNotationList);
 		Matches matches = performStructureSearch(query, notationList);
-		// FIX INDICES BACK - //TODO check
 		for (Integer index : matches.indicesOfInterest) {
 			indicesOfInterest.add(indicesList.get(index));
 		}
@@ -210,10 +208,7 @@ public class CombinedSearch {
 			if (connector.equals(Connector.AND)) { // intersection
 				for (int i = 1; i < list.size(); i++) {
 					matches.indicesOfInterest
-							.retainAll(list.get(i).indicesOfInterest); // TODO
-					// CHECK,
-					// and
-					// below
+							.retainAll(list.get(i).indicesOfInterest);
 				}
 
 			} else if (connector.equals(Connector.OR)) { // union
@@ -244,9 +239,9 @@ public class CombinedSearch {
 				if (node.isLeaf()) {
 					if (node.data.getClass().getName()
 							.equals("org.helm.notation.search.SequenceQuery")) {
-						// TODO perform sequence search (NB: restrict search
+						// perform sequence search (NB: restrict search
 						// based on existing matches in children of parent -
-						// check) - but can improve further
+						// check) - TODO can improve further
 						Set<Integer> indicesToSearch = new HashSet<Integer>();
 						for (int i = 0; i < notationList.size(); i++) {
 							indicesToSearch.add(i);
@@ -283,9 +278,9 @@ public class CombinedSearch {
 						break outer;
 					} else if (node.data.getClass().getName()
 							.equals("org.helm.notation.search.StructureQuery")) {
-						// TODO perform structure search (NB: restrict search
+						// perform structure search (NB: restrict search
 						// based on existing matches in children of parent -
-						// check) - but can improve further
+						// check) - TODO can improve further
 						Set<Integer> indicesToSearch = new HashSet<Integer>();
 						for (int i = 0; i < notationList.size(); i++) {
 							indicesToSearch.add(i);
@@ -334,7 +329,7 @@ public class CombinedSearch {
 						}
 					}
 					if (canCombine) {
-						// TODO combine results of children, CHECK
+						// combine results of children
 						List<Matches> list = new ArrayList<Matches>();
 						for (Grouping child : node.children) {
 							list.add((Matches) child.data);
@@ -347,7 +342,9 @@ public class CombinedSearch {
 				}
 			}
 		}
-		return (Matches) grouping.data;
+		Matches finalMatches = (Matches) grouping.data;
+		finalMatches.notationList = notationList;
+		return finalMatches;
 	}
 
 	// private static String createIndent(int depth) { //TODO can delete later -

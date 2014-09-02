@@ -26,10 +26,8 @@ public class Matches {
 	 * {@link List} of HELM {@link String}s denoting complex polymers on which
 	 * search was performed
 	 */
-	public List<String> notationList = new ArrayList<String>(); // TODO check
-																// used
-																// correctly
-
+	public List<String> notationList = new ArrayList<String>();
+	
 	/**
 	 * Method that generates text description of any warnings that apply to the
 	 * search results.

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.helm.notation.demo.search;
 
 import java.awt.*;

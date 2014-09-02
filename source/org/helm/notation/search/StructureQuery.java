@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.helm.notation.search;
 
 import org.helm.notation.search.Constants.*;

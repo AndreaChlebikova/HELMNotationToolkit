@@ -15,8 +15,7 @@ import java.util.HashSet;
  *
  * @author Andrea Chlebikova
  */
-// TODO could rewrite and group SmilesSetsList generating methods together into
-// fewer?
+
 public class ChemSearch {
 
 	/**
@@ -109,7 +108,7 @@ public class ChemSearch {
 	}
 
 	/**
-	 * Isolate the SMILES strings of the peptide simple polymers present.
+	 * Isolates the SMILES strings of the peptide simple polymers present.
 	 * 
 	 * @param notationList
 	 *            {@link List} of HELM {@link String}s denoting complex polymers

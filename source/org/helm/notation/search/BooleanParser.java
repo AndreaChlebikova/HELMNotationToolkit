@@ -21,11 +21,10 @@ public class BooleanParser { // TODO does not necessarily flag up invalid
 								// some way
 	private static final Map<Character, Connector> connectorMapping;
 	static {
-		Map<Character, Connector> map = new HashMap<Character, Connector>(); // TODO
-																				// can
-																				// generalise
-		map.put('&', Connector.AND);
-		map.put('|', Connector.OR);
+		Map<Character, Connector> map = new HashMap<Character, Connector>();
+		for (Connector connector : Connector.values()) {
+			map.put(connector.getSymbol(), connector);
+		}
 		connectorMapping = Collections.unmodifiableMap(map);
 	}
 
@@ -58,8 +57,9 @@ public class BooleanParser { // TODO does not necessarily flag up invalid
 
 		for (int j = 0; j < booleanConnectorsList.size(); j++) {
 			String bool = booleanConnectorsList.get(j);
-			bool = bool.replace("AND", "&");
-			bool = bool.replace("OR", "|");
+			for (Connector connector : Connector.values()) {
+				bool = bool.replace(connector.name(), String.valueOf(connector.getSymbol()));
+			}
 			if (!bool.isEmpty()) {
 				for (int i = 0; i < bool.length(); i++) {
 					if (bool.charAt(i) == '(' || bool.charAt(i) == ')'

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.helm.notation.demo.search;
 
 import java.awt.Container;
@@ -23,6 +20,7 @@ public class WaitingPane extends Container {
 	JButton interruptSearch = new JButton("Interrupt search");
 
 	private final ActionListener interrupt = new ActionListener() {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			GuiDemo.interrupted = true;
 			GuiDemo.displayResults();
