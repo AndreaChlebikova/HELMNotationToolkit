@@ -41,7 +41,6 @@ public class Demo {
 			e.printStackTrace();
 		}
 		
-		
 		query = new SequenceQuery("A-C", SequenceType.PEPTIDE, SearchType.EXACT);
 		queryList.add(query);
 		query = new SequenceQuery("G", SequenceType.NUCLEOTIDE, SearchType.EXACT); 

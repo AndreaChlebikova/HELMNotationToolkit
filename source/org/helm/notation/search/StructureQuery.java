@@ -9,19 +9,16 @@ import org.helm.notation.search.Constants.*;
  *
  */
 public class StructureQuery extends Query {
-	public String smarts; // TODO delete, or delete queryString
+	/** {@link SmilesLevel} denoting what level the search is to be carried out on */
 	public SmilesLevel smilesLevel;
-	public SearchType searchType = SearchType.SUBMATCH;
 
 	public StructureQuery(String smarts, SmilesLevel smilesLevel) {
-		this.smarts = smarts;
 		this.queryString = smarts;
 		this.smilesLevel = smilesLevel;
 	}
 
 	public StructureQuery(String smarts, SmilesLevel smilesLevel,
 			boolean negation) {
-		this.smarts = smarts;
 		this.queryString = smarts;
 		this.smilesLevel = smilesLevel;
 		this.negation = negation;
@@ -29,7 +26,6 @@ public class StructureQuery extends Query {
 
 	public StructureQuery(String smarts, SmilesLevel smilesLevel,
 			SearchType searchType) {
-		this.smarts = smarts;
 		this.queryString = smarts;
 		this.smilesLevel = smilesLevel;
 		this.searchType = searchType;
@@ -37,7 +33,6 @@ public class StructureQuery extends Query {
 
 	public StructureQuery(String smarts, SmilesLevel smilesLevel,
 			SearchType searchType, boolean negation) {
-		this.smarts = smarts;
 		this.queryString = smarts;
 		this.smilesLevel = smilesLevel;
 		this.searchType = searchType;
@@ -46,7 +41,6 @@ public class StructureQuery extends Query {
 
 	public StructureQuery(String smarts, SmilesLevel smilesLevel,
 			SearchType searchType, int cutoff) {
-		this.smarts = smarts;
 		this.queryString = smarts;
 		this.smilesLevel = smilesLevel;
 		this.searchType = searchType;
@@ -55,7 +49,6 @@ public class StructureQuery extends Query {
 
 	public StructureQuery(String smarts, SmilesLevel smilesLevel,
 			SearchType searchType, int cutoff, boolean negation) {
-		this.smarts = smarts;
 		this.queryString = smarts;
 		this.smilesLevel = smilesLevel;
 		this.searchType = searchType;

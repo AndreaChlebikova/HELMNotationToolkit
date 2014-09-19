@@ -16,9 +16,7 @@ import org.helm.notation.search.Constants.Connector;
  *
  */
 
-public class BooleanParser { // TODO does not necessarily flag up invalid
-								// expressions, if they can be interpreted in
-								// some way
+public class BooleanParser {
 	private static final Map<Character, Connector> connectorMapping;
 	static {
 		Map<Character, Connector> map = new HashMap<Character, Connector>();

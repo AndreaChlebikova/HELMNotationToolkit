@@ -346,13 +346,4 @@ public class CombinedSearch {
 		finalMatches.notationList = notationList;
 		return finalMatches;
 	}
-
-	// private static String createIndent(int depth) { //TODO can delete later -
-	// helps with visualising tree
-	// StringBuilder sb = new StringBuilder();
-	// for (int i = 0; i < depth; i++) {
-	// sb.append(' ');
-	// }
-	// return sb.toString();
-	// }
 }

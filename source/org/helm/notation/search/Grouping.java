@@ -10,7 +10,7 @@ import org.helm.notation.search.Constants.*;
  * The Grouping class stores both partial queries, and the way they are
  * logically connected, in a tree structure.
  * 
- * The leaves in the Grouping are usually {@link Query} objects ({@link Matches}
+ * The leaves in the Grouping are usually {@link Query} objects (successively replaced by {@link Matches}
  * during evaluation), while the remaining nodes are {@link Connector}s.
  * 
  * @author Andrea Chlebikova (based on tree structure by Grzegorz Dev)
@@ -145,7 +145,7 @@ public class Grouping implements Iterable<Grouping> {
 	 */
 
 	public Grouping optimise() {
-		Grouping newGrouping = this; // TODO improve optimisation
+		Grouping newGrouping = this; // TODO improve optimisation based on ordering of subgroupings
 		boolean changed = true;
 		while (changed) {
 			changed = false;
